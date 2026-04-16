@@ -1,9 +1,23 @@
 import { motion } from "motion/react";
 import { User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 export default function Navbar() {
   const location = useLocation();
+  const [isJoined, setIsJoined] = useState(false);
+
+  useEffect(() => {
+    const checkStatus = () => {
+      const status = localStorage.getItem("isJoinedCommunity") === "true";
+      setIsJoined(status);
+    };
+
+    checkStatus();
+    window.addEventListener("communityStatusChanged", checkStatus);
+    return () => window.removeEventListener("communityStatusChanged", checkStatus);
+  }, []);
+
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Layanan", href: "/layanan" },
@@ -40,16 +54,21 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-dark text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-slate-800 transition-colors"
-          >
-            Join Community
-          </motion.button>
-          <button className="p-2 rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">
-            <User size={20} />
-          </button>
+          {!isJoined ? (
+            <Link to="/join-community">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-dark text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-slate-800 transition-colors"
+              >
+                Join Community
+              </motion.button>
+            </Link>
+          ) : (
+            <Link to="/profile" className="p-2 rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">
+              <User size={20} />
+            </Link>
+          )}
         </div>
       </div>
     </nav>

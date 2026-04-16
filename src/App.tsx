@@ -8,6 +8,11 @@ import EventsPage from "./components/EventsPage";
 import EventDetail from "./components/EventDetail";
 import ExploreEvents from "./components/ExploreEvents";
 import RepositoryPage from "./components/RepositoryPage";
+import SubmitTemplatePage from "./components/SubmitTemplatePage";
+import RequestTemplatePage from "./components/RequestTemplatePage";
+import JoinCommunityPage from "./components/JoinCommunityPage";
+import AuthPage from "./components/AuthPage";
+import ProfilePage from "./components/ProfilePage";
 import Footer from "./components/Footer";
 
 
@@ -30,6 +35,11 @@ export default function App() {
             <Route path="/events/:id" element={<EventDetail />} />
             <Route path="/explore-events" element={<ExploreEvents />} />
             <Route path="/repository" element={<RepositoryPage />} />
+            <Route path="/repository/submit" element={<SubmitTemplatePage />} />
+            <Route path="/repository/request" element={<RequestTemplatePage />} />
+            <Route path="/join-community" element={<JoinCommunityPage />} />
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
           </Routes>
 
 

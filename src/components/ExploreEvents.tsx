@@ -57,22 +57,34 @@ const allEvents = [
 ];
 
 export default function ExploreEvents() {
-  const [activeTab, setActiveTab] = useState("Semua");
+  const [activeCategory, setActiveCategory] = useState("Semua");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const tabs = ["Semua", "Upcoming", "Past"];
+  const categories = [
+    { name: "Semua", image: "https://picsum.photos/seed/all/400/400" },
+    { name: "Musik", image: "https://picsum.photos/seed/music/400/400" },
+    { name: "Lomba", image: "https://picsum.photos/seed/contest/400/400" },
+    { name: "Trading", image: "https://picsum.photos/seed/trade/400/400" },
+    { name: "Kuliner", image: "https://picsum.photos/seed/food/400/400" },
+    { name: "Budaya", image: "https://picsum.photos/seed/culture/400/400" },
+    { name: "Keluarga", image: "https://picsum.photos/seed/family/400/400" },
+    { name: "Teknologi", image: "https://picsum.photos/seed/tech/400/400" },
+    { name: "Olahraga", image: "https://picsum.photos/seed/sport/400/400" },
+    { name: "Kesehatan", image: "https://picsum.photos/seed/health/400/400" },
+    { name: "Workshop Halal", image: "https://picsum.photos/seed/workshop/400/400" }
+  ];
 
   const filteredEvents = allEvents.filter(event => {
     const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase());
-    if (activeTab === "Semua") return matchesSearch;
-    return matchesSearch && event.type === activeTab;
+    const matchesCategory = activeCategory === "Semua" || event.category === activeCategory;
+    return matchesSearch && matchesCategory;
   });
 
   return (
     <div className="pt-20">
       <section className="py-16 bg-slate-50">
         <div className="container-custom">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
             <div>
               <p className="text-primary font-bold tracking-widest uppercase text-xs mb-4">Discovery</p>
               <h1 className="text-4xl md:text-5xl font-extrabold text-dark">Jelajahi Event.</h1>
@@ -89,24 +101,30 @@ export default function ExploreEvents() {
             </div>
           </div>
 
-          {/* Tabs */}
-          <div className="flex gap-4 mb-12 overflow-x-auto pb-2 no-scrollbar">
-            {tabs.map(tab => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-8 py-3 rounded-2xl font-bold whitespace-nowrap transition-all flex items-center gap-2 ${
-                  activeTab === tab 
-                    ? "bg-dark text-white shadow-xl" 
-                    : "bg-white text-slate-500 hover:bg-slate-100 border border-slate-100"
-                }`}
-              >
-                {tab === "Popular" && <Star size={16} className={activeTab === tab ? "text-yellow-400" : ""} />}
-                {tab === "Upcoming" && <TrendingUp size={16} />}
-                {tab === "Past" && <Clock size={16} />}
-                {tab}
-              </button>
-            ))}
+          {/* Categories Horizontal Scroll */}
+          <div className="mb-16">
+            <h2 className="text-xl font-bold text-dark mb-6">Telusuri Berdasarkan Kategori</h2>
+            <div className="flex gap-6 overflow-x-auto pb-6 no-scrollbar">
+              {categories.map((cat) => (
+                <motion.button
+                  key={cat.name}
+                  whileHover={{ y: -5 }}
+                  onClick={() => setActiveCategory(cat.name)}
+                  className={`flex-shrink-0 group relative w-32 md:w-40 aspect-square rounded-3xl overflow-hidden border-4 transition-all ${activeCategory === cat.name ? "border-primary shadow-xl shadow-primary/20" : "border-transparent"}`}
+                >
+                  <img 
+                    src={cat.image} 
+                    alt={cat.name} 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className={`absolute inset-0 bg-gradient-to-t from-dark/80 via-dark/20 to-transparent transition-opacity ${activeCategory === cat.name ? "opacity-100" : "opacity-60 group-hover:opacity-100"}`} />
+                  <div className="absolute inset-x-0 bottom-4 text-center px-2">
+                    <span className="text-white font-bold text-xs md:text-sm">{cat.name}</span>
+                  </div>
+                </motion.button>
+              ))}
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -180,30 +198,9 @@ export default function ExploreEvents() {
                 <Search size={32} />
               </div>
               <h3 className="text-xl font-bold text-dark mb-2">Tidak ada hasil</h3>
-              <p className="text-slate-500">Coba gunakan kata kunci lain atau ganti filter tab.</p>
+              <p className="text-slate-500">Coba gunakan kata kunci lain atau ganti kategori.</p>
             </div>
           )}
-        </div>
-      </section>
-
-      {/* Categories Grid */}
-      <section className="py-24 bg-white">
-        <div className="container-custom">
-          <h2 className="text-3xl font-bold text-dark mb-12 text-center">Telusuri Berdasarkan Kategori</h2>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-            {["Musik", "Lomba", "Trading", "Kuliner", "Budaya", "Keluarga", "Teknologi", "Olahraga", "Kesehatan", "Workshop Halal"].map((cat, idx) => (
-              <motion.button
-                key={cat}
-                whileHover={{ y: -10 }}
-                className="p-10 rounded-[2.5rem] bg-slate-50 border border-slate-100 flex flex-col items-center justify-center gap-4 hover:bg-white hover:shadow-xl hover:shadow-slate-100 transition-all group"
-              >
-                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white transition-all">
-                  <Star size={32} />
-                </div>
-                <span className="font-bold text-dark">{cat}</span>
-              </motion.button>
-            ))}
-          </div>
         </div>
       </section>
     </div>

@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { Download, Monitor, Printer, Phone, Instagram, FileText, Video, MessageCircle, Layout, Image as ImageIcon, CreditCard, ChevronDown, Search, Plus, Upload } from "lucide-react";
 
 const allTemplates = [
@@ -146,14 +146,14 @@ export default function RepositoryPage() {
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <button className="bg-primary text-white px-8 py-4 rounded-2xl font-bold shadow-lg shadow-primary/20 hover:bg-primary-dark transition-all flex items-center gap-2">
+              <Link to="/repository/request" className="bg-primary text-white px-8 py-4 rounded-2xl font-bold shadow-lg shadow-primary/20 hover:bg-primary-dark transition-all flex items-center gap-2">
                 <Plus size={20} />
                 Req Template
-              </button>
-              <button className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-4 rounded-2xl font-bold hover:bg-white/20 transition-all flex items-center gap-2">
+              </Link>
+              <Link to="/repository/submit" className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-4 rounded-2xl font-bold hover:bg-white/20 transition-all flex items-center gap-2">
                 <Upload size={20} />
                 Ajukan Template
-              </button>
+              </Link>
             </div>
           </motion.div>
         </div>
