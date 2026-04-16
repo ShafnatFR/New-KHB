@@ -8,12 +8,10 @@ export default function Navbar() {
     { name: "Home", href: "/" },
     { name: "Layanan", href: "/layanan" },
     { name: "Events", href: "/events" },
-    { name: "Repository", href: "#" },
+    { name: "Repository", href: "/repository" },
     { name: "Gallery", href: "/galeri" },
     { name: "Contact Us", href: "/kontak" },
   ];
-
-
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
@@ -40,7 +38,6 @@ export default function Navbar() {
             </Link>
           ))}
         </div>
-
 
         <div className="flex items-center gap-4">
           <motion.button

@@ -11,7 +11,7 @@ const eventDetails = {
     location: "Gedung Sate, Bandung",
     mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.915347209148!2d107.6166!3d-6.9024!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e64c5e8866e5%3A0x37b058041bdf137a!2sGedung%20Sate!5e0!3m2!1sen!2sid!4v1700000000000!5m2!1sen!2sid",
     attendees: "5000+ Peserta",
-    category: "Festival",
+    category: "Kuliner",
     image: "https://picsum.photos/seed/event1/1200/600",
     description: "Festival halal terbesar di Bandung yang menghadirkan ratusan tenant kuliner, fashion, dan talkshow inspiratif bersama para ahli industri halal.",
     speakers: [
@@ -32,7 +32,7 @@ const eventDetails = {
     location: "KHB Hub, Bandung",
     mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.839833230495!2d107.6094!3d-6.9175!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e630d00f339b%3A0x401576d14fed120!2sBandung%2C%20West%20Java!5e0!3m2!1sen!2sid!4v1700000000000!5m2!1sen!2sid",
     attendees: "100 UMKM",
-    category: "Workshop",
+    category: "Workshop Halal",
     image: "https://picsum.photos/seed/event2/1200/600",
     description: "Program pendampingan intensif bagi pelaku usaha kecil untuk mendapatkan sertifikat halal secara gratis melalui skema self-declare.",
     speakers: [
@@ -52,7 +52,7 @@ const eventDetails = {
     location: "Hotel Savoy Homann",
     mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.840776123456!2d107.6098!3d-6.9178!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e630d00f339b%3A0x401576d14fed120!2sSavoy%20Homann!5e0!3m2!1sen!2sid!4v1700000000000!5m2!1sen!2sid",
     attendees: "50 Investor",
-    category: "Networking",
+    category: "Trading",
     image: "https://picsum.photos/seed/event3/1200/600",
     description: "Eksklusif networking event yang mempertemukan pengusaha halal dengan calon investor dan mitra strategis.",
     speakers: [
@@ -65,6 +65,7 @@ const eventDetails = {
     ]
   }
 };
+
 
 export default function EventDetail() {
   const { id } = useParams();

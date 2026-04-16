@@ -12,7 +12,7 @@ const allEvents = [
     attendees: "5000+ Peserta",
     status: "Mendatang",
     image: "https://picsum.photos/seed/event1/800/500",
-    category: "Festival"
+    category: "Kuliner"
   },
   {
     id: 2,
@@ -22,7 +22,7 @@ const allEvents = [
     attendees: "100 UMKM",
     status: "Pendaftaran Dibuka",
     image: "https://picsum.photos/seed/event2/800/500",
-    category: "Workshop"
+    category: "Workshop Halal"
   },
   {
     id: 3,
@@ -32,7 +32,7 @@ const allEvents = [
     attendees: "50 Investor",
     status: "Mendatang",
     image: "https://picsum.photos/seed/event3/800/500",
-    category: "Networking"
+    category: "Trading"
   }
 ];
 
@@ -40,7 +40,7 @@ export default function EventsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Semua");
 
-  const categories = ["Semua", "Festival", "Workshop", "Networking"];
+  const categories = ["Semua", "Musik", "Lomba", "Trading", "Kuliner", "Budaya", "Keluarga", "Teknologi", "Olahraga", "Kesehatan", "Workshop Halal"];
 
   const filteredEvents = allEvents.filter(event => {
     const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -64,18 +64,29 @@ export default function EventsPage() {
           >
             <p className="text-primary font-bold tracking-widest uppercase text-xs mb-4">Agenda Komunitas</p>
             <h1 className="text-5xl md:text-6xl font-extrabold mb-6">Events & Kegiatan.</h1>
-            <p className="text-lg text-slate-400">
+            <p className="text-lg text-slate-400 mb-8">
               Jangan lewatkan kesempatan untuk belajar, berjejaring, dan mengembangkan bisnis Anda melalui berbagai agenda rutin kami.
             </p>
+            <Link to="/explore-events">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-primary text-white px-10 py-4 rounded-2xl font-bold shadow-lg shadow-primary/20 hover:bg-primary-dark transition-all flex items-center gap-2"
+              >
+                Jelajahi Semua Event
+                <ArrowRight size={20} />
+              </motion.button>
+            </Link>
           </motion.div>
+
         </div>
       </section>
 
       <section className="py-24 bg-white">
         <div className="container-custom">
-          {/* Search and Filter Bar */}
-          <div className="mb-16 flex flex-col lg:flex-row gap-6 items-center justify-between bg-slate-50 p-6 rounded-[2.5rem] border border-slate-100">
-            <div className="relative w-full lg:max-w-md">
+          {/* Search Bar */}
+          <div className="mb-8 bg-slate-50 p-6 rounded-[2.5rem] border border-slate-100">
+            <div className="relative w-full">
               <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
               <input 
                 type="text"
@@ -85,26 +96,27 @@ export default function EventsPage() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            
-            <div className="flex flex-wrap gap-3 w-full lg:w-auto">
-              <div className="flex items-center gap-3 mr-4 text-slate-500 font-bold text-sm">
-                <Filter size={18} />
-                Filter:
-              </div>
-              {categories.map(cat => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-6 py-3 rounded-xl text-sm font-bold transition-all ${
-                    selectedCategory === cat 
-                      ? "bg-primary text-white shadow-lg shadow-primary/20" 
-                      : "bg-white text-slate-600 hover:bg-slate-100 border border-slate-100"
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
+          </div>
+
+          {/* Category Filter */}
+          <div className="mb-16 flex flex-wrap gap-3 items-center bg-white p-2 rounded-2xl overflow-x-auto no-scrollbar">
+            <div className="flex items-center gap-3 mr-4 text-slate-500 font-bold text-sm shrink-0">
+              <Filter size={18} />
+              Filter Kategori:
             </div>
+            {categories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-6 py-3 rounded-xl text-sm font-bold transition-all whitespace-nowrap ${
+                  selectedCategory === cat 
+                    ? "bg-primary text-white shadow-lg shadow-primary/20" 
+                    : "bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-100"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
           </div>
 
           <div className="grid lg:grid-cols-3 gap-8">
@@ -180,31 +192,6 @@ export default function EventsPage() {
               </button>
             </div>
           )}
-        </div>
-      </section>
-
-
-      <section className="py-24 bg-slate-50">
-        <div className="container-custom">
-          <div className="bg-white rounded-[3rem] p-12 md:p-20 flex flex-col md:flex-row items-center gap-12 border border-slate-100 shadow-xl shadow-slate-200/50">
-            <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center text-primary shrink-0">
-              <Bell size={40} />
-            </div>
-            <div className="flex-1 text-center md:text-left">
-              <h2 className="text-3xl font-bold text-dark mb-4">Ingin Dapatkan Notifikasi Event?</h2>
-              <p className="text-slate-500">Daftarkan email Anda untuk mendapatkan info terbaru mengenai workshop, pameran, dan networking event dari KHB Bandung.</p>
-            </div>
-            <div className="w-full md:w-auto flex flex-col sm:flex-row gap-4">
-              <input 
-                type="email" 
-                placeholder="Alamat Email Anda"
-                className="px-8 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all min-w-[300px]"
-              />
-              <button className="bg-primary text-white px-10 py-4 rounded-2xl font-bold shadow-lg shadow-primary/20 hover:bg-primary-dark transition-all">
-                Berlangganan
-              </button>
-            </div>
-          </div>
         </div>
       </section>
     </div>

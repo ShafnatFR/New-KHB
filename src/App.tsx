@@ -6,7 +6,11 @@ import ContactUs from "./components/ContactUs";
 import GalleryPage from "./components/GalleryPage";
 import EventsPage from "./components/EventsPage";
 import EventDetail from "./components/EventDetail";
+import ExploreEvents from "./components/ExploreEvents";
+import RepositoryPage from "./components/RepositoryPage";
 import Footer from "./components/Footer";
+
+
 
 import ScrollToTop from "./components/ScrollToTop";
 
@@ -24,7 +28,11 @@ export default function App() {
             <Route path="/galeri" element={<GalleryPage />} />
             <Route path="/events" element={<EventsPage />} />
             <Route path="/events/:id" element={<EventDetail />} />
+            <Route path="/explore-events" element={<ExploreEvents />} />
+            <Route path="/repository" element={<RepositoryPage />} />
           </Routes>
+
+
 
         </main>
         <Footer />

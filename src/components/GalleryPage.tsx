@@ -3,21 +3,21 @@ import { useState } from "react";
 import { Search, Filter, Maximize2 } from "lucide-react";
 
 const galleryImages = [
-  { id: 1, src: "https://picsum.photos/seed/workshop1/800/600", title: "Workshop Sertifikasi Halal", category: "Workshop", desc: "Pelatihan intensif bagi pelaku UMKM Bandung." },
-  { id: 2, src: "https://picsum.photos/seed/expo1/800/600", title: "Halal Expo 2024", category: "Expo", desc: "Pameran produk unggulan komunitas halal." },
-  { id: 3, src: "https://picsum.photos/seed/net1/800/600", title: "Networking Night", category: "Networking", desc: "Pertemuan strategis antar pengusaha muslim." },
+  { id: 1, src: "https://picsum.photos/seed/workshop1/800/600", title: "Workshop Sertifikasi Halal", category: "Sertifikasi", desc: "Pelatihan intensif bagi pelaku UMKM Bandung." },
+  { id: 2, src: "https://picsum.photos/seed/expo1/800/600", title: "Profil Komunitas 2024", category: "Profil", desc: "Dokumentasi profil pengurus dan anggota." },
+  { id: 3, src: "https://picsum.photos/seed/net1/800/600", title: "Kolaborasi Instansi", category: "Kolaborasi", desc: "Pertemuan strategis dengan pemerintah daerah." },
   { id: 4, src: "https://picsum.photos/seed/workshop2/800/600", title: "Pelatihan Branding", category: "Workshop", desc: "Membangun identitas produk yang kuat." },
-  { id: 5, src: "https://picsum.photos/seed/expo2/800/600", title: "Bazaar Ramadhan", category: "Expo", desc: "Pasar rakyat produk halal terkurasi." },
-  { id: 6, src: "https://picsum.photos/seed/net2/800/600", title: "Kunjungan Industri", category: "Networking", desc: "Belajar langsung dari pabrik bersertifikat." },
-  { id: 7, src: "https://picsum.photos/seed/workshop3/800/600", title: "Digital Marketing", category: "Workshop", desc: "Strategi online untuk pasar halal." },
-  { id: 8, src: "https://picsum.photos/seed/expo3/800/600", title: "Festival Kuliner", category: "Expo", desc: "Eksplorasi rasa kuliner halal Bandung." },
+  { id: 5, src: "https://picsum.photos/seed/expo2/800/600", title: "Sertifikasi Self Declare", category: "Sertifikasi", desc: "Pendampingan pendaftaran sertifikat halal." },
+  { id: 6, src: "https://picsum.photos/seed/net2/800/600", title: "Workshop Digital", category: "Workshop", desc: "Belajar strategi pemasaran digital." },
+  { id: 7, src: "https://picsum.photos/seed/workshop3/800/600", title: "Kolaborasi UMKM", category: "Kolaborasi", desc: "Sinergi antar pelaku usaha lokal." },
+  { id: 8, src: "https://picsum.photos/seed/expo3/800/600", title: "Profil Anggota Baru", category: "Profil", desc: "Penyambutan anggota baru komunitas." },
 ];
 
 export default function GalleryPage() {
-  const [filter, setFilter] = useState("Semua");
-  const categories = ["Semua", "Workshop", "Networking", "Expo"];
+  const [filter, setFilter] = useState("All");
+  const categories = ["All", "Profil", "Sertifikasi", "Workshop", "Kolaborasi"];
 
-  const filteredImages = filter === "Semua" 
+  const filteredImages = filter === "All" 
     ? galleryImages 
     : galleryImages.filter(img => img.category === filter);
 
