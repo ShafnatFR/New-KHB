@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Mail, Lock, User, ArrowRight, ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, User, ArrowRight, ArrowLeft, Eye, EyeOff, AlertCircle, Loader } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const GoogleIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
@@ -13,31 +14,51 @@ const GoogleIcon = () => (
 );
 
 export default function AuthPage() {
-  const [isLogin, setIsLogin] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const navigate = useNavigate();
+  const [isLogin,              setIsLogin]             = useState(true);
+  const [showPassword,         setShowPassword]        = useState(false);
+  const [showConfirmPassword,  setShowConfirmPassword] = useState(false);
+  const [name,                 setName]                = useState("");
+  const [email,                setEmail]               = useState("");
+  const [password,             setPassword]            = useState("");
+  const [confirmPassword,      setConfirmPassword]     = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const navigate = useNavigate();
+  const { login, register, loadingAuth, authError, clearError } = useAuth();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate auth success
-    localStorage.setItem("isJoinedCommunity", "true");
-    window.dispatchEvent(new Event("communityStatusChanged"));
-    navigate("/");
+    clearError();
+
+    if (!isLogin && password !== confirmPassword) {
+      return; // Frontend validation bisa ditambahkan di sini
+    }
+
+    try {
+      if (isLogin) {
+        await login({ email, password });
+      } else {
+        await register({ name, email, password });
+      }
+      navigate("/");
+    } catch {
+      // Error sudah ditangani oleh AuthContext
+    }
+  };
+
+  const switchMode = () => {
+    setIsLogin(!isLogin);
+    clearError();
+    setName(""); setEmail(""); setPassword(""); setConfirmPassword("");
   };
 
   return (
     <div className="min-h-screen pt-20 pb-12 flex items-center justify-center bg-slate-50 px-4">
       <div className="max-w-md w-full">
         <Link to="/join-community" className="inline-flex items-center gap-2 text-slate-500 hover:text-primary font-bold mb-8 transition-colors">
-          <ArrowLeft size={20} />
-          Kembali
+          <ArrowLeft size={20} /> Kembali
         </Link>
 
-        <motion.div 
-          layout
-          className="bg-white rounded-[3rem] shadow-2xl overflow-hidden border border-slate-100"
-        >
+        <motion.div layout className="bg-white rounded-[3rem] shadow-2xl overflow-hidden border border-slate-100">
           <div className="p-8 md:p-12">
             <div className="text-center mb-10">
               <h1 className="text-3xl font-extrabold text-dark mb-2">
@@ -47,6 +68,18 @@ export default function AuthPage() {
                 {isLogin ? "Masuk untuk mengakses fitur komunitas." : "Daftar untuk menjadi bagian dari Halal Bandung."}
               </p>
             </div>
+
+            {/* Error Banner */}
+            {authError && (
+              <motion.div
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 flex items-center gap-3 bg-red-50 border border-red-100 text-red-600 px-5 py-4 rounded-2xl text-sm font-medium"
+              >
+                <AlertCircle size={18} className="shrink-0" />
+                {authError}
+              </motion.div>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <AnimatePresence mode="wait">
@@ -60,11 +93,10 @@ export default function AuthPage() {
                     <label className="text-sm font-bold text-dark ml-2">Nama Lengkap</label>
                     <div className="relative">
                       <User className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
-                      <input 
-                        required
-                        type="text" 
-                        placeholder="John Doe"
+                      <input
+                        required type="text" placeholder="John Doe"
                         className="w-full pl-14 pr-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all"
+                        value={name} onChange={e => setName(e.target.value)}
                       />
                     </div>
                   </motion.div>
@@ -75,11 +107,10 @@ export default function AuthPage() {
                 <label className="text-sm font-bold text-dark ml-2">Email</label>
                 <div className="relative">
                   <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
-                  <input 
-                    required
-                    type="email" 
-                    placeholder="name@example.com"
+                  <input
+                    required type="email" placeholder="name@example.com"
                     className="w-full pl-14 pr-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all"
+                    value={email} onChange={e => setEmail(e.target.value)}
                   />
                 </div>
               </div>
@@ -88,17 +119,12 @@ export default function AuthPage() {
                 <label className="text-sm font-bold text-dark ml-2">Password</label>
                 <div className="relative">
                   <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
-                  <input 
-                    required
-                    type={showPassword ? "text" : "password"} 
-                    placeholder="••••••••"
+                  <input
+                    required type={showPassword ? "text" : "password"} placeholder="••••••••"
                     className="w-full pl-14 pr-14 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all"
+                    value={password} onChange={e => setPassword(e.target.value)}
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors"
-                  >
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors">
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
@@ -115,17 +141,12 @@ export default function AuthPage() {
                     <label className="text-sm font-bold text-dark ml-2">Konfirmasi Password</label>
                     <div className="relative">
                       <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
-                      <input 
-                        required
-                        type={showConfirmPassword ? "text" : "password"} 
-                        placeholder="••••••••"
+                      <input
+                        required type={showConfirmPassword ? "text" : "password"} placeholder="••••••••"
                         className="w-full pl-14 pr-14 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all"
+                        value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}
                       />
-                      <button
-                        type="button"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors"
-                      >
+                      <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors">
                         {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                       </button>
                     </div>
@@ -139,16 +160,21 @@ export default function AuthPage() {
                 </div>
               )}
 
-              <button type="submit" className="w-full bg-primary text-white py-5 rounded-2xl font-bold text-lg shadow-xl shadow-primary/20 hover:bg-primary-dark transition-all flex items-center justify-center gap-3">
-                {isLogin ? "Masuk" : "Daftar"}
-                <ArrowRight size={20} />
+              <button
+                type="submit"
+                disabled={loadingAuth}
+                className="w-full bg-primary text-white py-5 rounded-2xl font-bold text-lg shadow-xl shadow-primary/20 hover:bg-primary-dark transition-all flex items-center justify-center gap-3 disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {loadingAuth ? (
+                  <><Loader size={20} className="animate-spin" /> Memproses...</>
+                ) : (
+                  <>{isLogin ? "Masuk" : "Daftar"} <ArrowRight size={20} /></>
+                )}
               </button>
             </form>
 
             <div className="relative my-10">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-100"></div>
-              </div>
+              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-100"></div></div>
               <div className="relative flex justify-center text-sm">
                 <span className="px-4 bg-white text-slate-400 font-medium">Atau lanjutkan dengan</span>
               </div>
@@ -156,8 +182,7 @@ export default function AuthPage() {
 
             <div className="flex flex-col gap-4">
               <button className="flex items-center justify-center gap-3 py-4 rounded-2xl border border-slate-100 hover:bg-slate-50 transition-all font-bold text-sm">
-                <GoogleIcon />
-                Lanjutkan dengan Google
+                <GoogleIcon /> Lanjutkan dengan Google
               </button>
             </div>
           </div>
@@ -165,10 +190,7 @@ export default function AuthPage() {
           <div className="bg-slate-50 p-8 text-center border-t border-slate-100">
             <p className="text-slate-500 text-sm">
               {isLogin ? "Belum punya akun?" : "Sudah punya akun?"}{" "}
-              <button 
-                onClick={() => setIsLogin(!isLogin)}
-                className="text-primary font-bold hover:underline"
-              >
+              <button onClick={switchMode} className="text-primary font-bold hover:underline">
                 {isLogin ? "Daftar Sekarang" : "Masuk Sekarang"}
               </button>
             </p>

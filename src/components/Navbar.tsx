@@ -1,22 +1,11 @@
 import { motion } from "motion/react";
 import { User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
   const location = useLocation();
-  const [isJoined, setIsJoined] = useState(false);
-
-  useEffect(() => {
-    const checkStatus = () => {
-      const status = localStorage.getItem("isJoinedCommunity") === "true";
-      setIsJoined(status);
-    };
-
-    checkStatus();
-    window.addEventListener("communityStatusChanged", checkStatus);
-    return () => window.removeEventListener("communityStatusChanged", checkStatus);
-  }, []);
+  const { isAuthenticated } = useAuth();
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -43,8 +32,8 @@ export default function Navbar() {
               key={link.name}
               to={link.href}
               className={`text-sm font-medium transition-colors ${
-                location.pathname === link.href 
-                  ? "text-primary font-bold" 
+                location.pathname === link.href
+                  ? "text-primary font-bold"
                   : "text-slate-600 hover:text-primary"
               }`}
             >
@@ -54,7 +43,7 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
-          {!isJoined ? (
+          {!isAuthenticated ? (
             <Link to="/join-community">
               <motion.button
                 whileHover={{ scale: 1.05 }}

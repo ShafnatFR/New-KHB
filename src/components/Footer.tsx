@@ -1,15 +1,32 @@
 import { Phone, Clock, MapPin, Instagram, Facebook, Youtube } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useCMS } from "../context/CMSContext";
 
 export default function Footer() {
+  const { settings } = useCMS();
+
+  // Fallback data jika CMS belum terhubung
+  const siteName    = settings?.site_name || "KHB BANDUNG";
+  const copyright   = settings?.copyright_text || `© ${new Date().getFullYear()} Komunitas Halal Bandung (KHB). All Rights Reserved.`;
+  const socialLinks = settings?.social_links || [];
+
+  // Ikon per platform
+  const platformIcon = (platform: string) => {
+    switch (platform.toLowerCase()) {
+      case "instagram": return <Instagram size={20} />;
+      case "facebook":  return <Facebook size={20} />;
+      case "youtube":   return <Youtube size={20} />;
+      default:          return <Instagram size={20} />;
+    }
+  };
+
   const links = [
-    { name: "Tentang Kami", href: "#" },
-    { name: "Klinik UMKM", href: "/layanan" },
-    { name: "Hubungi Kami", href: "/kontak" },
-    { name: "Syarat & Ketentuan", href: "#" },
+    { name: "Tentang Kami",      href: "#" },
+    { name: "Klinik UMKM",       href: "/layanan" },
+    { name: "Hubungi Kami",      href: "/kontak" },
+    { name: "Syarat & Ketentuan",href: "#" },
     { name: "Kebijakan Privasi", href: "#" },
   ];
-
 
   return (
     <footer className="bg-dark text-white pt-20 pb-10">
@@ -21,21 +38,31 @@ export default function Footer() {
               <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-xl">
                 KHB
               </div>
-              <span className="font-display font-bold text-2xl tracking-tight">KHB BANDUNG</span>
+              <span className="font-display font-bold text-2xl tracking-tight">{siteName}</span>
             </Link>
             <p className="text-slate-400 text-sm leading-relaxed">
-              Komunitas Halal Bandung (KHB) berkomitmen untuk mengakselerasi pertumbuhan UMKM melalui ekosistem ekonomi halal yang terintegrasi dan profesional.
+              {settings?.tagline || "Komunitas Halal Bandung (KHB) berkomitmen untuk mengakselerasi pertumbuhan UMKM melalui ekosistem ekonomi halal yang terintegrasi dan profesional."}
             </p>
             <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary transition-colors">
-                <Instagram size={20} />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary transition-colors">
-                <Facebook size={20} />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary transition-colors">
-                <Youtube size={20} />
-              </a>
+              {socialLinks.length > 0 ? (
+                socialLinks.map((s) => (
+                  <a
+                    key={s.platform}
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary transition-colors"
+                  >
+                    {platformIcon(s.platform)}
+                  </a>
+                ))
+              ) : (
+                <>
+                  <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary transition-colors"><Instagram size={20} /></a>
+                  <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary transition-colors"><Facebook size={20} /></a>
+                  <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary transition-colors"><Youtube size={20} /></a>
+                </>
+              )}
             </div>
           </div>
 
@@ -52,7 +79,6 @@ export default function Footer() {
               ))}
             </ul>
           </div>
-
 
           {/* Contact & Hours */}
           <div className="space-y-6">
@@ -82,17 +108,17 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Location / Maps */}
+          {/* Location */}
           <div>
             <h3 className="font-bold text-lg mb-6">Lokasi Kami</h3>
             <div className="rounded-2xl overflow-hidden h-40 bg-slate-800 relative group">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126748.56347862248!2d107.5731164!3d-6.9034443!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e6398252477f%3A0x146a9440548d56a2!2sBandung%2C%20Bandung%20City%2C%20West%20Java!5e0!3m2!1sen!2sid!4v1713212345678!5m2!1sen!2sid" 
-                width="100%" 
-                height="100%" 
-                style={{ border: 0 }} 
-                allowFullScreen={true} 
-                loading="lazy" 
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126748.56347862248!2d107.5731164!3d-6.9034443!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e6398252477f%3A0x146a9440548d56a2!2sBandung%2C%20Bandung%20City%2C%20West%20Java!5e0!3m2!1sen!2sid!4v1713212345678!5m2!1sen!2sid"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={true}
+                loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 className="grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
               ></iframe>
@@ -105,9 +131,7 @@ export default function Footer() {
         </div>
 
         <div className="pt-10 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-[10px] font-medium text-slate-500">
-            © 2024 Komunitas Halal Bandung (KHB). All Rights Reserved.
-          </p>
+          <p className="text-[10px] font-medium text-slate-500">{copyright}</p>
           <div className="flex gap-6">
             <a href="#" className="text-[10px] font-bold text-slate-500 hover:text-white transition-colors">SITEMAP</a>
             <a href="#" className="text-[10px] font-bold text-slate-500 hover:text-white transition-colors">COOKIES</a>
@@ -117,4 +141,3 @@ export default function Footer() {
     </footer>
   );
 }
-

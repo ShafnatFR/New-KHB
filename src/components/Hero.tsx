@@ -2,29 +2,49 @@ import { motion, AnimatePresence } from "motion/react";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useCMS } from "../context/CMSContext";
+import type { HeroOverride } from "./Home";
 
-export default function Hero() {
+interface HeroProps {
+  cmsOverride?: HeroOverride;
+}
+
+export default function Hero({ cmsOverride = {} }: HeroProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const { settings } = useCMS();
 
-  const images = [
+  // Fallback statis — digunakan jika CMS tidak mengirim data
+  const STATIC_IMAGES = [
     "https://picsum.photos/seed/business1/800/1000",
     "https://picsum.photos/seed/business2/800/1000",
     "https://picsum.photos/seed/business3/800/1000",
     "https://picsum.photos/seed/business4/800/1000",
   ];
 
+  // Data dari CMS atau fallback statis
+  const badge    = cmsOverride.badge    ?? "Keluarga Selamanya";
+  const headline = cmsOverride.headline ?? "KHB On Clinic:";
+  const headlineSub = settings?.tagline ?? "Business Growth.";
+  const desc     = cmsOverride.desc     ??
+    "Akselerasi UMKM Anda melalui konsultasi bisnis mendalam, pendampingan legalitas NIB & PIRT, serta percepatan Sertifikasi Halal yang kredibel.";
+  const images   = (cmsOverride.slides?.length ?? 0) > 0
+    ? cmsOverride.slides!
+    : STATIC_IMAGES;
+
   useEffect(() => {
+    if (isHovered) return;
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % images.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, [images.length]);
+  }, [images.length, isHovered]);
 
   return (
     <section className="pt-32 pb-20 overflow-hidden bg-gradient-to-b from-slate-50 to-white">
       <div className="container-custom">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* Left — Text */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -32,18 +52,18 @@ export default function Hero() {
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold mb-6">
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              Keluarga Selamanya
+              {badge}
             </div>
-            
+
             <h1 className="text-5xl md:text-7xl font-extrabold text-dark leading-[1.1] mb-6">
-              KHB On Clinic: <br />
-              <span className="text-primary italic">Business Growth.</span>
+              {headline} <br />
+              <span className="text-primary italic">{headlineSub}</span>
             </h1>
-            
+
             <p className="text-lg text-slate-600 mb-8 max-w-xl leading-relaxed">
-              Akselerasi UMKM Anda melalui konsultasi bisnis mendalam, pendampingan legalitas NIB & PIRT, serta percepatan Sertifikasi Halal yang kredibel.
+              {desc}
             </p>
-            
+
             <div className="flex flex-wrap gap-4">
               <Link to="/layanan">
                 <motion.button
@@ -55,7 +75,7 @@ export default function Hero() {
                   <ArrowRight size={20} />
                 </motion.button>
               </Link>
-              
+
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -66,6 +86,7 @@ export default function Hero() {
             </div>
           </motion.div>
 
+          {/* Right — Image Carousel */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -74,11 +95,12 @@ export default function Hero() {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
-            {/* Carousel Indicators */}
+            {/* Carousel indicators */}
             <div className="absolute top-6 right-6 z-30 flex gap-2">
               {images.map((_, idx) => (
-                <div 
+                <button
                   key={idx}
+                  onClick={() => setCurrentIndex(idx)}
                   className={`h-1.5 rounded-full transition-all duration-500 ${
                     currentIndex === idx ? "w-8 bg-primary" : "w-2 bg-white/50"
                   }`}
@@ -86,14 +108,16 @@ export default function Hero() {
               ))}
             </div>
 
-            <div 
-              className={`relative z-10 rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 aspect-[4/5] ${isHovered ? "ring-4 ring-primary/30 scale-[1.02]" : "ring-0"}`}
+            <div
+              className={`relative z-10 rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 aspect-[4/5] ${
+                isHovered ? "ring-4 ring-primary/30 scale-[1.02]" : "ring-0"
+              }`}
             >
               <AnimatePresence mode="wait">
                 <motion.img
                   key={currentIndex}
                   src={images[currentIndex]}
-                  alt={`Business Growth ${currentIndex + 1}`}
+                  alt={`KHB Slide ${currentIndex + 1}`}
                   initial={{ opacity: 0, scale: 1.1 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
@@ -102,10 +126,14 @@ export default function Hero() {
                   referrerPolicy="no-referrer"
                 />
               </AnimatePresence>
-              <div className={`absolute inset-0 bg-primary/10 mix-blend-multiply transition-opacity duration-500 ${isHovered ? "opacity-0" : "opacity-100"}`} />
+              <div
+                className={`absolute inset-0 bg-primary/10 mix-blend-multiply transition-opacity duration-500 ${
+                  isHovered ? "opacity-0" : "opacity-100"
+                }`}
+              />
             </div>
-            
-            {/* Floating Badge */}
+
+            {/* Floating badge */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -120,8 +148,8 @@ export default function Hero() {
                 <p className="text-lg font-bold text-dark">1,200+ Sertifikat Halal</p>
               </div>
             </motion.div>
-            
-            {/* Decorative elements */}
+
+            {/* Decorative blobs */}
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl" />
             <div className="absolute -bottom-10 -left-10 w-60 h-60 bg-secondary/5 rounded-full blur-3xl" />
           </motion.div>
@@ -130,5 +158,3 @@ export default function Hero() {
     </section>
   );
 }
-
-
